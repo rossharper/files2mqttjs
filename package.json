@@ -1,0 +1,45 @@
+{
+  "name": "files2mqttjs",
+  "version": "1.0.0",
+  "description": "Watch a directory structure for sensor data to be reported over MQTT",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rossharper/files2mqttjs.git"
+  },
+  "keywords": [
+    "mqtt",
+    "iot",
+    "node",
+    "js",
+    "sensor"
+  ],
+  "author": "Ross Harper",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/rossharper/files2mqttjs/issues"
+  },
+  "homepage": "https://github.com/rossharper/files2mqttjs#readme",
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
+    "jest": "^27.4.7"
+  },
+  "dependencies": {
+    "chokidar": "^3.5.3",
+    "mqtt": "^4.3.4"
+  },
+  "eslintConfig": {
+    "rules": {
+      "no-console": "off"
+    }
+  }
+}
