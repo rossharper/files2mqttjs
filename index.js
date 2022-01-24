@@ -103,6 +103,7 @@ function sendConfigurationMessages (client, watchPaths) {
         const tempTopic = `home/sensor/${device}temp/config`
         const tempConfigPayload = {
             object_id: `${device}_temperature`,
+            unique_id: `${device}_temperature`,
             name: `${device} Temperature`,
             device_class: 'temperature',
             state_topic: `home/sensor/${device}/state`,
@@ -114,6 +115,7 @@ function sendConfigurationMessages (client, watchPaths) {
         const battTopic = `home/sensor/${device}batt/config`
         const battConfigPayload = {
             object_id: `${device}_battery`,
+            unique_id: `${device}_battery`,
             name: `${device} Battery`,
             device_class: 'battery',
             state_topic: `home/sensor/${device}/state`,
