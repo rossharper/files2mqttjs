@@ -1,3 +1,5 @@
+#!/bin/bash
+
 read -p 'MQTT Broker Address: ' broker_address
 read -p 'MQTT Broker Username: ' user
 read -sp 'MQTT Broker Password: ' pass
