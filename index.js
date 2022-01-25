@@ -80,7 +80,7 @@ function watchSensorData (watchPaths, onSensorData) {
     }
 
     function fileUpdated (updatedPath) {
-        log(`File udpate: ${updatedPath}`)
+        log(`${new Date().toISOString()} File udpate: ${updatedPath}`)
         const devicePath = path.dirname(updatedPath)
         readSensorData(devicePath)
     }
@@ -98,7 +98,7 @@ function watchSensorData (watchPaths, onSensorData) {
 function sendConfigurationMessages (client, watchPaths) {
     watchPaths.forEach(watchPath => {
         const device = path.basename(watchPath)
-        log(`Send configuration messages for ${device}`)
+        log(`${new Date().toISOString()} Send configuration messages for ${device}`)
 
         const tempTopic = `home/sensor/${device}temp/config`
         const tempConfigPayload = {
@@ -133,7 +133,7 @@ function sendSensorDataState (client, sensorData) {
 }
 
 function sendMessage (client, topic, payload, options) {
-    log(`Publishing to topic: ${topic}`)
+    log(`${new Date().toISOString()} Publishing to topic: ${topic}`)
     log(payload)
     client.publish(topic, JSON.stringify(payload), options)
 }
