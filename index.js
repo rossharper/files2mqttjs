@@ -67,6 +67,7 @@ function watchSensorData (watchPaths, onSensorData) {
                 const batteryVoltage = parseFloat(battData)
                 if (isNaN(batteryVoltage)) {
                     console.error(`Battery Voltage from ${battDataPath} is NaN`)
+                    return
                 }
                 onSensorData({
                     device: device,
