@@ -107,6 +107,7 @@ function sendConfigurationMessages (client, watchPaths) {
             unique_id: `${device}_temperature`,
             name: `${device} Temperature`,
             device_class: 'temperature',
+            state_class: 'measurement',
             state_topic: `home/sensor/${device}/state`,
             unit_of_measurement: '°C',
             value_template: '{{ value_json.temperature }}'
@@ -119,6 +120,7 @@ function sendConfigurationMessages (client, watchPaths) {
             unique_id: `${device}_battery`,
             name: `${device} Battery`,
             device_class: 'battery',
+            state_class: 'measurement',
             state_topic: `home/sensor/${device}/state`,
             unit_of_measurement: '%',
             value_template: '{{ ((min([value_json.battery_voltage-2.0,1.0]))*100) | round(2) }}'
