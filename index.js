@@ -7,6 +7,7 @@ const log = console.log.bind(console)
 const mqtt = require('mqtt')
 
 const temperatureSensorDataFilename = 'value'
+const humiditySensorDataFilename = 'hum'
 const batterySensorDataFilename = 'batt'
 
 function usage () {
@@ -49,6 +50,7 @@ function watchSensorData (watchPaths, onSensorData) {
     function readSensorData (devicePath) {
         const device = path.basename(devicePath)
         const tempDataPath = path.join(devicePath, temperatureSensorDataFilename)
+        const humDataPath = path.join(devicePath, humiditySensorDataFilename)
         const battDataPath = path.join(devicePath, batterySensorDataFilename)
         fs.readFile(tempDataPath, 'utf8', (err, tempData) => {
             if (err) {
@@ -69,13 +71,39 @@ function watchSensorData (watchPaths, onSensorData) {
                     console.error(`Battery Voltage from ${battDataPath} is NaN`)
                     return
                 }
-                onSensorData({
-                    device: device,
-                    data: {
-                        temperature: temperature,
-                        battery_voltage: batteryVoltage
+                try {
+                    if (fs.existsSync(humDataPath)) {
+                        fs.readFile(humDataPath, 'utf8', (err, humData) => {
+                            if (err) {
+                                console.error(err)
+                                return
+                            }
+                            const humidity = parseFloat(humData)
+                            if (isNaN(humidity)) {
+                                console.error(`Humidity from ${humDataPath} is NaN`)
+                                return
+                            }
+                            onSensorData({
+                                device: device,
+                                data: {
+                                    temperature: temperature,
+                                    humidity: humidity,
+                                    battery_voltage: batteryVoltage
+                                }
+                            })
+                        })
+                    } else {
+                        onSensorData({
+                            device: device,
+                            data: {
+                                temperature: temperature,
+                                battery_voltage: batteryVoltage
+                            }
+                        })
                     }
-                })
+                } catch (err) {
+                    log(`${new Date().toISOString()} Error looking for humidity for ${device}`)
+                }
             })
         })
     }
@@ -113,6 +141,27 @@ function sendConfigurationMessages (client, watchPaths) {
             value_template: '{{ value_json.temperature }}'
         }
         sendMessage(client, tempTopic, tempConfigPayload, { retain: true })
+
+        try {
+            if (fs.existsSync(path.join(watchPath, humiditySensorDataFilename))) {
+                const humTopic = `home/sensor/${device}hum/config`
+                const humConfigPayload = {
+                    object_id: `${device}_humidity`,
+                    unique_id: `${device}_humidity`,
+                    name: `${device} Humidity`,
+                    device_class: 'humidty',
+                    state_class: 'measurement',
+                    state_topic: `home/sensor/${device}/state`,
+                    unit_of_measurement: '%',
+                    value_template: '{{ value_json.humidity }}'
+                }
+                sendMessage(client, humTopic, humConfigPayload, { retain: true })
+            } else {
+                log(`${new Date().toISOString()} No humidity for ${device}`)
+            }
+        } catch (err) {
+            log(`${new Date().toISOString()} Error looking for humidity for ${device}`)
+        }
 
         const battTopic = `home/sensor/${device}batt/config`
         const battConfigPayload = {
