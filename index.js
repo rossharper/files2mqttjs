@@ -149,7 +149,7 @@ function sendConfigurationMessages (client, watchPaths) {
                     object_id: `${device}_humidity`,
                     unique_id: `${device}_humidity`,
                     name: `${device} Humidity`,
-                    device_class: 'humidty',
+                    device_class: 'humidity',
                     state_class: 'measurement',
                     state_topic: `home/sensor/${device}/state`,
                     unit_of_measurement: '%',
