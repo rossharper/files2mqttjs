@@ -190,13 +190,18 @@ function sendMessage (client, topic, payload, options) {
     client.publish(topic, JSON.stringify(payload), options)
 }
 
+let watching = false
+
 function run (args) {
     const client = mqtt.connect(`mqtt://${args.mqttBrokerAddr}`, { username: args.username, password: args.password })
     client.on('connect', function () {
-        sendConfigurationMessages(client, args.watchPaths)
-        watchSensorData(args.watchPaths, sensorData => {
-            sendSensorDataState(client, sensorData)
-        })
+        if (!watching) {
+            watching = true
+            sendConfigurationMessages(client, args.watchPaths)
+            watchSensorData(args.watchPaths, sensorData => {
+                sendSensorDataState(client, sensorData)
+            })
+        }
     })
     process.on('exit', () => { client.end() })
     process.on('SIGINT', () => {
